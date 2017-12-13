@@ -1,7 +1,10 @@
-module.exports = function(app) {
+const Authentication = require('./controllers/authentication')
 
-  app.get('/', (req, res, next) => {
-    res.send(['User', 'Parties', 'Incessantly'])
-  })
 
+module.exports = (app) => {
+app.post('/signup', Authentication.signup)
+}
+
+module.exports = (app) => {
+  
 }
