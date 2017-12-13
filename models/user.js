@@ -31,6 +31,14 @@ userSchema.pre('save', (next) => {
   })
 })
 
+userSchema.methods.comparePasswords = (candidatePassword, callback) => {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+    if (err) { return callback(err) }
+
+    callback(null, isMatch);
+  })
+}
+
 // create the model calss
 //says hey mongoose there is a new schema here it is about user
 const ModelClass = mongoose.model('user', userSchema)
