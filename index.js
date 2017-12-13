@@ -5,6 +5,8 @@ const express = require('express'),
       app = express()
 //app setup this talkes to our application
 
+app.use(morgan('combined'))
+app.use(bodyParser.json({ type: '*/*'}))
 
 
 // server setup talks to the outside world
