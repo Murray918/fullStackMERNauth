@@ -2,11 +2,13 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       http = require('http'),
       morgan = require('morgan'),
-      app = express()
+      app = express(),
+      router = require('./router')
 //app setup this talkes to our application
 
 app.use(morgan('combined'))
 app.use(bodyParser.json({ type: '*/*'}))
+router(app);
 
 
 // server setup talks to the outside world
