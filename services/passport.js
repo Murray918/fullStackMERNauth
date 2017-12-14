@@ -19,7 +19,12 @@ const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
 
     //compare password - is 'password' === to user.password?
     // remember that we hased the password
-    
+    user.comparePassword(password, (err, isMatch) => {
+      if (err) { return done(err) }
+      if (!usMatch) { return done(null, false) }
+
+      return done(null, user)
+    })
   })
 })
 
@@ -50,3 +55,4 @@ const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
 });
 
 passport.use(jwtLogin);
+passport.use(localLogin);
