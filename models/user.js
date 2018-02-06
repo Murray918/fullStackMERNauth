@@ -1,43 +1,40 @@
-const mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	bcrypt = require('bcrypt-nodejs');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const bcrypt = require('bcrypt-nodejs');
 
-//Define model
-//mongoose will not reaconize two emails with the same characters but that have differant cases as the same thing thats why we convert it to lower case
+// Define our model
 const userSchema = new Schema({
 	email: { type: String, unique: true, lowercase: true },
 	password: String
 });
 
-//Pre save hook encrypt password
-//Before saving a model, run this function
-userSchema.pre('save', next => {
+// On Save Hook, encrypt password
+// Before saving a model, run this function
+userSchema.pre('save', function(next) {
 	// get access to the user model
-	console.log(next);
-	console.log();
-	const user = userSchema;
+	const user = this;
 
-	//generate a salt then run callbck
-	bcrypt.genSalt(10, (err, salt) => {
+	// generate a salt then run callback
+	bcrypt.genSalt(10, function(err, salt) {
 		if (err) {
 			return next(err);
 		}
 
-		//hash our password using the salt
-		bcrypt.hash(user.password, salt, null, (err, hash) => {
+		// hash (encrypt) our password using the salt
+		bcrypt.hash(user.password, salt, null, function(err, hash) {
 			if (err) {
 				return next(err);
 			}
 
-			//set the password to the hash
-			return next((user.password = hash));
-			// next()
+			// overwrite plain text password with encrypted password
+			user.password = hash;
+			next();
 		});
 	});
 });
 
-userSchema.methods.comparePasswords = (candidatePassword, callback) => {
-	bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+userSchema.methods.comparePassword = function(candidatePassword, callback) {
+	bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
 		if (err) {
 			return callback(err);
 		}
@@ -46,9 +43,8 @@ userSchema.methods.comparePasswords = (candidatePassword, callback) => {
 	});
 };
 
-// create the model calss
-//says hey mongoose there is a new schema here it is about user
+// Create the model class
 const ModelClass = mongoose.model('user', userSchema);
 
-//export the model
+// Export the model
 module.exports = ModelClass;
