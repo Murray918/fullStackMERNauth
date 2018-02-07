@@ -3,11 +3,14 @@ const Authentication = require('./controllers/authentication'),
 	passport = require('passport');
 
 const requireAuth = passport.authenticate('jwt', { session: false });
-const requireSignin = passport.authenticate('jwt', { session: false });
+const requireSignin = passport.authenticate('local', { session: false });
 
-module.exports = app => {
-	app.get('/', requireAuth, (req, res) => {
-		res.send({ hi: 'there' });
+module.exports = function(app) {
+	app.get('/', requireAuth, function(req, res) {
+		if (err) {
+			res.send(err);
+		}
+		res.send({ message: 'Here is a secret code bingBang4567' });
 	});
 	app.post('/signin', requireSignin, Authentication.signin);
 	app.post('/signup', Authentication.signup);
