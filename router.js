@@ -7,9 +7,6 @@ const requireSignin = passport.authenticate('local', { session: false });
 
 module.exports = function(app) {
 	app.get('/', requireAuth, function(req, res) {
-		if (err) {
-			res.send(err);
-		}
 		res.send({ message: 'Here is a secret code bingBang4567' });
 	});
 	app.post('/signin', requireSignin, Authentication.signin);
